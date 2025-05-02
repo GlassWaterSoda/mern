@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Auth Website</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+    <body>
+        <p>-------------------------------------------------------------------------</p>
+
+        <div>
+        <label>Sign up</label><br />
+        <input id="signup-username" type="text" placeholder="UserName" name="username"/>
+        <input id="signup-password" type="password" placeholder="password" name="password"/>
+        <button type="submit" onclick="signup()">Submit</button>
+       </div>
+
+       <p>-------------------------------------------------------------------------</p>
+       <div>
+        <label>Sign in</label><br />
+        <input id="signin-username"  type="text" placeholder="UserName" name="username"/>
+        <input id="signin-password" type="password" placeholder="password" name="password"/>
+        <button type="submit" onclick="signin()">Submit</button>
+       </div>
+        
+       <p>-------------------------------------------------------------------------</p>
+       <div>
+        <p>User Information</p><br />
+        <div id="info"></div>
+       </div>
+       <p>-------------------------------------------------------------------------</p>
+
+       <button type="button" onclick="logout()">logout</button>
+        <script>
+async function getUserInfo(){
+    const response = await axios.get("http://localhost:3000/me", {
+        headers:{
+            token: localStorage.getItem('token')
+        }
+    })
+    document.getElementById('info').innerHTML = "Username: " + response.data.username
+}
+    
+
+async function signup() {
+    const username = document.getElementById("signup-username").value;
+    const password = document.getElementById("signup-password").value;
+
+    const response = await axios.post("http://localhost:3000/signup", {
+        username: username,
+        password: password
+    })
+    alert("Signed up successfully");
+}
+
+
+async function signin(){
+    const username = document.getElementById("signin-username").value;
+    const password = document.getElementById("signin-password").value;
+
+    const response = await axios.post("http://localhost:3000/signin", {
+        username: username,
+        password: password
+    })
+    
+    localStorage.setItem("token", response.data.token)
+    alert(localStorage.getItem('token'))
+    getUserInfo()
+}
+
+    
+getUserInfo()
+function logout(){
+    localStorage.removeItem('token')
+    alert('Logout Sucessfull ' + "token: " + localStorage.getItem('token') )
+    location.reload()
+}
+        </script>
+    </body>
+</html>
