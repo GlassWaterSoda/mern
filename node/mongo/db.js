@@ -13,7 +13,7 @@ const Todo = new Schema({
     userId: ObjectId,
     title: String,
     description: String,
-    done: Boolean
+    status: Boolean
 })
 
 
