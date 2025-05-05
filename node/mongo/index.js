@@ -4,13 +4,14 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
 const { z, string } = require('zod')
-
+require('dotenv').config();
 const JWT_SECRET = "mysecret"
 
 const { UserModel, TodoModel} = require("./db")
 const { auth } = require("./auth")
+console.log("DB_HOST:", process.env.DB_HOST);
 
-mongoose.connect('mongodb+srv://jrhys1986:Z1w9RDp59SohAgdr@cluster0.jafo3.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect(process.env.DB_HOST)
 
 app.use(express.json())
 
@@ -23,9 +24,9 @@ app.get("/", (req,res)=>[
 
 app.post('/signup', async (req,res)=>{
     const requireBody = z.object({
-        email: z.email().min(8),
+        email: z.string().min(8),
         name: z.string().min(3).max(100),
-        password: z.password().min(8).max(100)
+        password: z.string().min(8).max(100)
     })
 
     const parsedBody = requireBody.parse(req.body)
